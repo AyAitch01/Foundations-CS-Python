@@ -1,0 +1,74 @@
+items = [("chips", 2.0), ("kinder", 3.0), ("redbull", 4.0), ("water", 1.0), ("cake", 8.0)]
+total_bill = 0
+coupon = 0
+bought_items = []
+
+def add_item(item_name):
+    global total_bill, bought_items
+    for item in items:
+        if item[0] == item_name:
+            total_bill += item[1]
+            bought_items.append(item)
+
+def check_total():
+    print("The total of your bill is:", total_bill)
+
+def add_coupon(coupon_value):
+    global coupon
+    coupon += coupon_value
+
+def checkout():
+    print("Items bought and their quantities:")
+    for item in bought_items:
+        print(f"{item[0]}: {item[1]}")
+    print("Total order:", total_bill)
+    print("Total coupons:", coupon)
+    print("Total to pay:", total_bill - coupon)
+
+def new_order():
+    choice = -99 
+    while choice != 4:
+        print("Enter")
+        print("1. to add an item")
+        print("2. to check total")
+        print("3. to add a coupon")
+        print("4. to checkout")
+
+        choice = int(input())
+
+        if choice == 1:
+            item_name = input("Enter item name: ")
+            add_item(item_name)
+        elif choice == 2:
+            check_total()
+        elif choice == 3:
+            coupon_value = float(input("Enter the value of the coupon: "))
+            add_coupon(coupon_value)
+        elif choice == 4:
+            checkout()
+        else:
+            print("Invalid input")
+
+def main_menu():
+    choice = -99 
+    while choice != 2:
+        print("Enter")
+        print("1. to start a new order")
+        print("2. to close the program")
+        
+        choice = int(input())
+        
+        if choice == 1:
+            print("starting a new order...")
+            new_order()
+            global total_bill, coupon, bought_items
+            total_bill = 0
+            coupon = 0
+            bought_items = []
+        elif choice == 2:
+            print("bye bye")
+        else:
+            print("Invalid input")
+
+if __name__ == "__main__":
+    main_menu()

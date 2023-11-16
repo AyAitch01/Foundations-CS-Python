@@ -1,0 +1,91 @@
+class TransportSystem:
+    def __init__(self):
+        self.cities = []
+        self.drivers = {}
+
+    def add_city(self, city_name):
+        self.cities.append(city_name)
+        print(f"City '{city_name}' added successfully.")
+
+    def add_driver(self, driver_name, route):
+        self.drivers[driver_name] = route
+        print(f"Driver '{driver_name}' with route {route} added successfully.")
+
+    def add_city_to_driver_route(self, driver_name, city_name, position):
+        if driver_name not in self.drivers:
+            print(f"Error: Driver '{driver_name}' not found.")
+            return
+
+        route = self.drivers[driver_name]
+
+        if position == 0:
+            route.insert(0, city_name)
+        elif position == -1:
+            route.append(city_name)
+        elif 0 <= position < len(route):
+            route.insert(position, city_name)
+        else:
+            print(f"Error: Invalid position for city '{city_name}' in the route.")
+
+    def remove_city_from_driver_route(self, driver_name, city_name):
+        if driver_name not in self.drivers:
+            print(f"Error: Driver '{driver_name}' not found.")
+            return
+
+        route = self.drivers[driver_name]
+
+        if city_name in route:
+            route.remove(city_name)
+            print(f"City '{city_name}' removed from the route of driver '{driver_name}' successfully.")
+        else:
+            print(f"Error: City '{city_name}' not found in the route of driver '{driver_name}'.")
+
+    def check_deliverability(self, target_city):
+        delivering_drivers = [driver for driver, route in self.drivers.items() if target_city in route]
+        if delivering_drivers:
+            print(f"Drivers delivering to '{target_city}': {delivering_drivers}")
+        else:
+            print(f"No drivers found for delivering to '{target_city}'.")
+
+def main():
+    transport_system = TransportSystem()
+
+    while True:
+        print("\nEnter:")
+        print("1. To add a city")
+        print("2. To add a driver")
+        print("3. To add a city to the route of a driver")
+        print("4. Remove a city from a driver’s route")
+        print("5. To check the deliverability of a package")
+
+        choice = int(input("Choice: "))
+
+        if choice == 1:
+            city_name = input("Enter the name of the city: ")
+            transport_system.add_city(city_name)
+
+        elif choice == 2:
+            driver_name = input("Enter the name of the driver: ")
+            route = input("Enter the route for the driver (comma-separated cities): ").split(',')
+            transport_system.add_driver(driver_name, route)
+
+        elif choice == 3:
+            driver_name = input("Enter the name of the driver: ")
+            city_name = input("Enter the name of the city to add: ")
+            position = int(input("Enter the position (-1 to add to the end, 0 to add to the beginning, or index to add at): "))
+            transport_system.add_city_to_driver_route(driver_name, city_name, position)
+
+        elif choice == 4:
+            driver_name = input("Enter the name of the driver: ")
+            city_name = input("Enter the name of the city to remove: ")
+            transport_system.remove_city_from_driver_route(driver_name, city_name)
+
+        elif choice == 5:
+            target_city = input("Enter the name of the city to check deliverability: ")
+            transport_system.check_deliverability(target_city)
+
+        else:
+            print("Invalid choice. Please enter a valid option.")
+
+if __name__ == "__main__":
+    main()

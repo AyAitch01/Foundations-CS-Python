@@ -1,0 +1,252 @@
+#Exercise 1
+#1
+def is_palindrome(input_str):
+   
+    input_str = ''.join(char.lower() for char in input_str if char.isalnum())
+
+   
+    stack = []
+    for char in input_str:
+        stack.append(char)
+
+    reversed_str = ''
+    while stack:
+        reversed_str += stack.pop()
+
+    return input_str == reversed_str
+
+
+input1 = "mom"
+input2 = "Neveroddoreven"
+
+print(f'Is "{input1}" a palindrome? {is_palindrome(input1)}')
+print(f'Is "{input2}" a palindrome? {is_palindrome(input2)}'
+      
+#2
+def is_balanced(expression):
+    stack = []
+    opening_brackets = "({["
+    closing_brackets = ")}]"
+
+    def is_matching(opening, closing):
+        return opening_brackets.index(opening) == closing_brackets.index(closing)
+
+    for char in expression:
+        if char in opening_brackets:
+            stack.append(char)
+        elif char in closing_brackets:
+            if not stack or not is_matching(stack.pop(), char):
+                return False
+
+    return not stack
+
+
+input1 = "(1+2)-3*[41+6]"
+input2 = "(1+2)-3*[41+6}"
+input3 = "(1+2)-3*[41+6"
+input4 = "(1+[2-3]*4{41+6})"
+input5 = "(1+2)-3*]41+6["
+
+print(f'Is "{input1}" balanced? {is_balanced(input1)}')
+print(f'Is "{input2}" balanced? {is_balanced(input2)}')
+print(f'Is "{input3}" balanced? {is_balanced(input3)}')
+print(f'Is "{input4}" balanced? {is_balanced(input4)}')
+print(f'Is "{input5}" balanced? {is_balanced(input5)}')
+
+#stack
+
+def decode_message(encoded_message):
+    stack = []
+
+    for char in encoded_message:
+        if char.isalpha() or char.isspace():
+            stack.append(char)
+        elif char == '*':
+            if stack:
+                stack.pop()
+
+    while stack:
+        stack.pop()
+
+  
+    decoded_message = ''.join(stack)
+
+    return decoded_message
+
+encoded_message = "SIVLE ****** DAED TNSI ***"
+decoded_message = decode_message(encoded_message)
+print(decoded_message)
+
+# linked list
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class LinkedList:
+    def __init__(self):
+        self.head = None
+
+    def append(self, data):
+        new_node = Node(data)
+        if not self.head:
+            self.head = new_node
+            return
+        current = self.head
+        while current.next:
+            current = current.next
+        current.next = new_node
+
+    def display(self):
+        current = self.head
+        while current:
+            print(current.data, end=" -> ")
+            current = current.next
+        print("None")
+
+    def deleteAtLocation(self, position):
+        if position < 0:
+            print("Invalid position")
+            return
+
+        if position == 0:
+            if self.head:
+                self.head = self.head.next
+            else:
+                print("List is empty")
+            return
+
+        current = self.head
+        prev = None
+        count = 0
+
+        while current and count < position:
+            prev = current
+            current = current.next
+            count += 1
+
+        if not current:
+            print("Position out of bounds")
+            return
+
+        prev.next = current.next
+
+
+llist = LinkedList()
+llist.append(12)
+llist.append(56)
+llist.append(76)
+llist.append(11)
+llist.append(0)
+
+print("Original Linked List:")
+llist.display()
+
+llist.deleteAtLocation(0)
+print("\nLinked List after deleting node at position 0:")
+llist.display()
+
+llist.deleteAtLocation(2)
+print("\nLinked List after deleting node at position 2:")
+llist.display()
+
+#Graphs
+#1
+def is_route(graph, start, end, visited=None):
+    if visited is None:
+        visited = set()
+
+    visited.add(start)
+
+    if start == end:
+        return True
+
+    for neighbor in graph.get(start, []):
+        if neighbor not in visited:
+            if is_route(graph, neighbor, end, visited):
+                return True
+
+    return False
+
+
+cities_graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': [],
+    'F': ['G'],
+    'G': []
+}
+
+print(is_route(cities_graph, 'A', 'G'))  
+print(is_route(cities_graph, 'A', 'D'))  
+print(is_route(cities_graph, 'A', 'F'))  
+print(is_route(cities_graph, 'B', 'G')) 
+
+#2
+def has_cycle(graph):
+    visited = set()
+    recursion_stack = set()
+
+    def dfs(node):
+        visited.add(node)
+        recursion_stack.add(node)
+
+        for neighbor in graph.get(node, []):
+            if neighbor not in visited:
+                if dfs(neighbor):
+                    return True
+            elif neighbor in recursion_stack:
+                return True
+
+        recursion_stack.remove(node)
+        return False
+
+    for node in graph:
+        if node not in visited:
+            if dfs(node):
+                return True
+
+    return False
+
+
+directed_graph = {
+    'A': ['B'],
+    'B': ['C'],
+    'C': ['A'],
+    'D': ['E'],
+    'E': []
+}
+
+print(has_cycle(directed_graph))  
+
+
+
+#3
+
+def common_followings(graph, user1, user2):
+    followings_user1 = set(graph.get(user1, []))
+    followings_user2 = set(graph.get(user2, []))
+
+    common_followings_list = followings_user1.intersection(followings_user2)
+    print(f"Common followings for {user1} and {user2}: {list(common_followings_list)}")
+
+def users_not_followed_by_both(graph, user1, user2):
+    all_users = set(graph.keys())
+    followings_user1 = set(graph.get(user1, []))
+    followings_user2 = set(graph.get(user2, []))
+
+    not_followed_by_both = all_users - followings_user1 - followings_user2
+    print(f"Users not followed by both {user1} and {user2}: {list(not_followed_by_both)}")
+
+instagram_graph = {
+    'user1': ['user2', 'user3', 'user4'],
+    'user2': ['user1', 'user3'],
+    'user3': ['user1'],
+    'user4': []
+}
+
+common_followings(instagram_graph, 'user1', 'user2')
+users_not_followed_by_both(instagram_graph, 'user1', 'user2')
